@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class Demo implements CommandLineRunner {
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         log.info("Starting blockchain demo.");
 
         //1. how hashing works:
@@ -19,12 +19,12 @@ public class Demo implements CommandLineRunner {
         System.out.println("Hash of the word 'example': "+calculateHash("example"));
         System.out.println("Hash of the word 'example1': "+calculateHash("example1"));
 
-
-        //2. blockchain demo
         /*
+        //2. blockchain demo
+
         Blockchain csabaCoin = new Blockchain();
-        csabaCoin.addBlock(new Block(1, "Amount: 7", ""));
-        csabaCoin.addBlock(new Block(2, "Amount: 21", ""));
+        csabaCoin.addBlock(new Block("Amount: 7", ""));
+        csabaCoin.addBlock(new Block("Amount: 21", ""));
         System.out.println(csabaCoin);
 
         System.out.println("Is chain valid: "+csabaCoin.isChainValid());
@@ -33,11 +33,11 @@ public class Demo implements CommandLineRunner {
         //3. tampering with the blockchain
         csabaCoin.getChain().get(1).setData("Amount: 100");
         System.out.println("Is chain valid after tampering: "+csabaCoin.isChainValid());
-        csabaCoin.getChain().get(1).setHash(csabaCoin.getChain().get(1).calculateHash());
-        System.out.println("Is chain valid after hash was recalculated: "+csabaCoin.isChainValid());
+        //csabaCoin.getChain().get(1).setHash(csabaCoin.getChain().get(1).calculateHash());
+        //System.out.println("Is chain valid after hash was recalculated: "+csabaCoin.isChainValid());
         System.out.println(csabaCoin);
+        */
 
-         */
     }
 
 

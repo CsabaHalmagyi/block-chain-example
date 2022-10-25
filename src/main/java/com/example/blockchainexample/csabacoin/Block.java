@@ -11,15 +11,13 @@ import java.sql.Timestamp;
 @Data
 public class Block {
 
-    private Integer index;
     private String dateCreated;
     private String data;
     private String previousHash;
     private String hash;
 
 
-    public Block(Integer index, String data, String previousHash){
-        this.index = index;
+    public Block(String data, String previousHash){
         this.dateCreated = new Timestamp(System.currentTimeMillis()).toString();
         this.data = data;
         this.previousHash = previousHash;
@@ -28,7 +26,7 @@ public class Block {
 
     public String calculateHash(){
         return Hashing.sha256()
-                .hashString(this.index.toString() + this.previousHash + this.dateCreated + this.data,
+                .hashString( this.previousHash + this.dateCreated + this.data,
                         StandardCharsets.UTF_8).toString();
     }
 

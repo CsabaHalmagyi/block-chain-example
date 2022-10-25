@@ -40,7 +40,7 @@ public class Blockchain {
         return true;
     }
     private Block createGenesisBlock(){
-        return new Block(0, "GENESIS BLOCK", "0");
+        return new Block("GENESIS BLOCK", "0");
     }
 
     @Override
