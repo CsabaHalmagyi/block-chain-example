@@ -1,8 +1,6 @@
 package com.example.blockchainexample.csabacoin;
 
 import com.google.common.hash.Hashing;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,24 +12,24 @@ import java.util.List;
 @Slf4j
 public class Block {
 
-    private String dateCreated;
-    private List<Transaction> transactions;
-    private String previousHash;
+    private String letrehozasDatuma;
+    private List<Transaction> tranzakciok;
+    private String elozoHash;
     private String hash;
     private Integer nonce;
 
 
-    public Block(List<Transaction> transactions, String previousHash){
-        this.dateCreated = new Timestamp(System.currentTimeMillis()).toString();
-        this.transactions = transactions;
+    public Block(List<Transaction> tranzakciok, String elozoHash){
+        this.letrehozasDatuma = new Timestamp(System.currentTimeMillis()).toString();
+        this.tranzakciok = tranzakciok;
         this.nonce = 0;
-        this.previousHash = previousHash;
+        this.elozoHash = elozoHash;
         this.hash = calculateHash();
     }
 
     public String calculateHash(){
         return Hashing.sha256()
-                .hashString(this.previousHash + this.dateCreated + this.transactions.toString() + this.nonce,
+                .hashString(this.elozoHash + this.letrehozasDatuma + this.tranzakciok.toString() + this.nonce,
                         StandardCharsets.UTF_8).toString();
     }
 
@@ -47,7 +45,22 @@ public class Block {
 
     @Override
     public String toString() {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        return gson.toJson(this);
+        //Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        //return gson.toJson(this);
+        String tranzakciokLista = "";
+        for(Transaction t:tranzakciok){
+            tranzakciokLista +=
+            "### Kitől: " + t.getKitol()+ "\n" +
+            "### Kinek: " + t.getKinek() + "\n" +
+            "### Összeg: " + t.getOsszeg() +"\n" +
+            "###-----------------------\n";
+        }
+        return
+                "########################################################################################\n" +
+                "### Létrehozás dátuma: "+ letrehozasDatuma +"                                    \t ###\n" +
+                "### Hash:\t\t"+ hash +"\t ###\n" +
+                "### ElőzőHash:\t"+ elozoHash +"\t ###\n" +
+                "########################################################################################\n"+
+                tranzakciokLista;
     }
 }

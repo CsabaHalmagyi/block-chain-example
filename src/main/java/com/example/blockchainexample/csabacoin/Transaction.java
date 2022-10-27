@@ -7,7 +7,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class Transaction {
 
-    private String fromAddress;
-    private String toAddress;
-    private int amount;
+    private String kitol;
+    private String kinek;
+    private int osszeg;
+
 }

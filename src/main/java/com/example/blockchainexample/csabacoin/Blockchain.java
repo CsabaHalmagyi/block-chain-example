@@ -21,7 +21,7 @@ public class Blockchain {
         this.chain = new ArrayList<>();
         this.chain.add(createGenesisBlock());
         this.pendingTransactions = new ArrayList<>();
-        this.difficulty = 4;
+        this.difficulty = 5;
         this.miningReward = 100;
     }
 
@@ -29,11 +29,17 @@ public class Blockchain {
         return chain.get(chain.size()-1);
     }
 
+    public void blokkotHozzaAd(Block block){
+        block.setElozoHash(this.getLatestBlock().getHash());
+        block.setHash(block.calculateHash());
+        this.chain.add(block);
+    }
+
     public void minePendingTransactions(String miningRewardAddress){
         Block block = new Block(this.pendingTransactions, "");
         block.mineBlock(this.difficulty);
         log.info("Block successfully mined.");
-        block.setPreviousHash(this.getLatestBlock().getHash());
+        block.setElozoHash(this.getLatestBlock().getHash());
         block.setHash(block.calculateHash());
         this.chain.add(block);
         this.pendingTransactions = new ArrayList<>();
@@ -47,12 +53,12 @@ public class Blockchain {
     public int getBalanceByAddress(String address){
         int balance = 0;
         for(Block block:this.chain){
-            for(Transaction transaction:block.getTransactions()){
-                if(transaction.getFromAddress().equals(address))
-                    balance -= transaction.getAmount();
+            for(Transaction tranzakcio:block.getTranzakciok()){
+                if(tranzakcio.getKitol().equals(address))
+                    balance -= tranzakcio.getOsszeg();
 
-                if(transaction.getToAddress().equals(address))
-                    balance += transaction.getAmount();
+                if(tranzakcio.getKinek().equals(address))
+                    balance += tranzakcio.getOsszeg();
             }
         }
         return balance;
@@ -65,7 +71,7 @@ public class Blockchain {
             Block previousBlock = chain.get(i-1);
 
             if (!currentBlock.getHash().equals(currentBlock.calculateHash())) return false;
-            if (!currentBlock.getPreviousHash().equals(previousBlock.getHash())) return false;
+            if (!currentBlock.getElozoHash().equals(previousBlock.getHash())) return false;
         }
         return true;
     }
@@ -73,12 +79,20 @@ public class Blockchain {
         Transaction firstTransaction = new Transaction("", "", 0);
         List<Transaction> transactions = new ArrayList<>();
         transactions.add(firstTransaction);
-        return new Block(transactions, "0");
+        return new Block(transactions, " ".repeat(64));
     }
 
     @Override
     public String toString() {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        return gson.toJson(this);
+        //Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        //return gson.toJson(this);
+        String chainString = "";
+        int c = 1;
+        for(Block b:chain){
+            chainString += "Blokk "+c+"\n";
+            chainString += b.toString();
+            c++;
+        }
+        return chainString;
     }
 }
