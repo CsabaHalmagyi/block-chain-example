@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +22,10 @@ public class Demo implements CommandLineRunner {
     }
 
 
-
+    /*
+        CsabaCoin bemutatása:
+        Tranzakció, Blokk, Blokklánc
+     */
     private void demo1(){
         Blockchain csabaCoin = new Blockchain();
 
@@ -37,13 +39,16 @@ public class Demo implements CommandLineRunner {
         tranzakciok2.add(new Transaction("erika-cime", "csaba-cime", 10));
         tranzakciok2.add(new Transaction("gergo-cime", "andras-cime", 35));
 
-        csabaCoin.blokkotHozzaAd(new Block(tranzakciok1, ""));
-        csabaCoin.blokkotHozzaAd(new Block(tranzakciok2, ""));
+        csabaCoin.addBlock(new Block(tranzakciok1, ""));
+        csabaCoin.addBlock(new Block(tranzakciok2, ""));
 
         System.out.println(csabaCoin);
-        System.out.println("\nA blokklánc hibátlan: "+csabaCoin.isChainValid());
+        System.out.println("\nA blokklánc hibátlan: "+(csabaCoin.isChainValid()?"IGEN":"NEM"));
     }
 
+    /*
+        Mi történik, ha belepiszkálunk a tranzakciókba?
+     */
     private void demo2(){
         Blockchain csabaCoin = new Blockchain();
 
@@ -52,26 +57,29 @@ public class Demo implements CommandLineRunner {
         tranzakciok1.add(new Transaction("andras-cime", "bela-cime", 50));
         tranzakciok1.add(new Transaction("bela-cime", "csaba-cime", 25));
 
-        csabaCoin.blokkotHozzaAd(new Block(tranzakciok1, ""));
+        csabaCoin.addBlock(new Block(tranzakciok1, ""));
 
         List<Transaction> tranzakciok2 = new ArrayList<>();
         tranzakciok2.add(new Transaction("erika-cime", "bela-cime", 100));
         tranzakciok2.add(new Transaction("erika-cime", "csaba-cime", 10));
         tranzakciok2.add(new Transaction("gergo-cime", "andras-cime", 35));
 
-        csabaCoin.blokkotHozzaAd(new Block(tranzakciok2, ""));
+        csabaCoin.addBlock(new Block(tranzakciok2, ""));
 
-        System.out.println("\nA blokklánc a létrehozást követően hibátlan: "+csabaCoin.isChainValid());
+        System.out.println("\nA blokklánc a létrehozást követően hibátlan: "+(csabaCoin.isChainValid()?"IGEN":"NEM"));
 
         //Béla nem 25, hanem 55 coint utalt Csabának
         csabaCoin.getChain().get(1).getTranzakciok().get(2).setOsszeg(55);
-        System.out.println("\nA blokklánc hibátlan miután megváltoztattuk az összeget: "+csabaCoin.isChainValid());
+        System.out.println("\nA blokklánc hibátlan miután megváltoztattuk az összeget: "+(csabaCoin.isChainValid()?"IGEN":"NEM"));
+        // Számoljuk újra a hash-t
         //csabaCoin.getChain().get(1).setHash(csabaCoin.getChain().get(1).calculateHash());
-        //System.out.println("\nA blokklánc hibátlan miután megváltoztattuk az összeget és újrageneráltuk a hash-t: "+csabaCoin.isChainValid());
+        //System.out.println("\nA blokklánc hibátlan miután megváltoztattuk az összeget és újrageneráltuk a hash-t: "+(csabaCoin.isChainValid()?"IGEN":"NEM"));
         System.out.println(csabaCoin);
     }
 
-
+    /*
+        Blokk bányászása
+    */
     private void demo3(){
         Blockchain csabaCoin = new Blockchain();
 

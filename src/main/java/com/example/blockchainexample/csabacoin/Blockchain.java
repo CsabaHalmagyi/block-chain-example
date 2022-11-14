@@ -1,7 +1,5 @@
 package com.example.blockchainexample.csabacoin;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -11,8 +9,9 @@ import java.util.List;
 @Data
 @Slf4j
 public class Blockchain {
-
+    //DEMO 1-2
     private List<Block> chain;
+    //DEMO 3
     private Integer difficulty;
     private List<Transaction> pendingTransactions;
     private int miningReward;
@@ -20,8 +19,9 @@ public class Blockchain {
     public Blockchain() {
         this.chain = new ArrayList<>();
         this.chain.add(createGenesisBlock());
+        // DEMO 3
         this.pendingTransactions = new ArrayList<>();
-        this.difficulty = 5;
+        this.difficulty = 3;
         this.miningReward = 100;
     }
 
@@ -29,16 +29,37 @@ public class Blockchain {
         return chain.get(chain.size()-1);
     }
 
-    public void blokkotHozzaAd(Block block){
+    public void addBlock(Block block){
         block.setElozoHash(this.getLatestBlock().getHash());
         block.setHash(block.calculateHash());
         this.chain.add(block);
     }
 
+
+    private Block createGenesisBlock(){
+        Transaction firstTransaction = new Transaction("", "", 0);
+        List<Transaction> transactions = new ArrayList<>();
+        transactions.add(firstTransaction);
+        return new Block(transactions, " ".repeat(64));
+    }
+
+    public boolean isChainValid(){
+        if (chain.size() == 1) return true;
+        for(int i=1; i<chain.size(); i++){
+            Block currentBlock = chain.get(i);
+            Block previousBlock = chain.get(i-1);
+
+            if (!currentBlock.getHash().equals(currentBlock.calculateHash())) return false;
+            if (!currentBlock.getElozoHash().equals(previousBlock.getHash())) return false;
+        }
+        return true;
+    }
+
+
     public void minePendingTransactions(String miningRewardAddress){
         Block block = new Block(this.pendingTransactions, "");
         block.mineBlock(this.difficulty);
-        log.info("Block successfully mined.");
+        log.info("Block sikeresen bányászva.");
         block.setElozoHash(this.getLatestBlock().getHash());
         block.setHash(block.calculateHash());
         this.chain.add(block);
@@ -62,24 +83,6 @@ public class Blockchain {
             }
         }
         return balance;
-    }
-
-    public boolean isChainValid(){
-        if (chain.size() == 1) return true;
-        for(int i=1; i<chain.size(); i++){
-            Block currentBlock = chain.get(i);
-            Block previousBlock = chain.get(i-1);
-
-            if (!currentBlock.getHash().equals(currentBlock.calculateHash())) return false;
-            if (!currentBlock.getElozoHash().equals(previousBlock.getHash())) return false;
-        }
-        return true;
-    }
-    private Block createGenesisBlock(){
-        Transaction firstTransaction = new Transaction("", "", 0);
-        List<Transaction> transactions = new ArrayList<>();
-        transactions.add(firstTransaction);
-        return new Block(transactions, " ".repeat(64));
     }
 
     @Override

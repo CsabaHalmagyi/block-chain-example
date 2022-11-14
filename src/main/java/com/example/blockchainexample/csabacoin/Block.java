@@ -11,11 +11,12 @@ import java.util.List;
 @Data
 @Slf4j
 public class Block {
-
+    //DEMO 1-2
     private String letrehozasDatuma;
     private List<Transaction> tranzakciok;
     private String elozoHash;
     private String hash;
+    //DEMO 3
     private Integer nonce;
 
 
